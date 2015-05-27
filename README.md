@@ -2,10 +2,10 @@
 A Simple yet reliable CSV Parser for iOS and OS X!
 
 
-CSV: comma-separated values (CSV) file file stores tabular data (numbers and text) in plain text.
+A CSV is a comma separated values file, which allows data to be saved in a table structured format. CSVs look like a garden-variety spreadsheet but with a .csv extension (Traditionally they take the form of a text file containing information separated by commas, hence the name).
 
 ####HOW TO USE:
-Add ERCSVParser.h and ERCSVParser.m in your project.
+Add ```ERCSVParser.h``` and ```ERCSVParser.m``` to your project.
 
 and import the ERCSVParser class header:
 ```
@@ -13,10 +13,11 @@ and import the ERCSVParser class header:
 ```
 
 ####Example:
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"file" ofType:@"txt"];
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"file" ofType:@"csv"];
         ERCSVParser *parser = [ERCSVParser new];
-        NSArray *arrayOfArray = [parser parseIntoArraysOfArray:path];
-        NSArray *arraysOfDictionary = [parser parseIntoArraysOfDictionary:path];
+        NSArray *arrayOfArrays = [parser parseIntoArraysOfArrays:path];
+        NSArray *arraysOfDictionaries = [parser parseIntoArraysOfDictionaries:path];
+
 
 
 
