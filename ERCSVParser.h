@@ -10,6 +10,6 @@
 
 @interface ERCSVParser : NSObject
 
--(NSArray *) parseIntoArraysOfArray:(NSString *) path;
--(NSArray *) parseIntoArraysOfDictionary:(NSString *) path;
+-(NSArray *) parseIntoArraysOfArrays:(NSString *) path;
+-(NSArray *) parseIntoArraysOfDictionaries:(NSString *) path;
 @end

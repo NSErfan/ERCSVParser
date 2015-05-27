@@ -19,14 +19,14 @@
 
 @implementation ERCSVParser
 
--(NSArray *)parseIntoArraysOfArray:(NSString *)path
+-(NSArray *)parseIntoArraysOfArrays:(NSString *)path
 {
     self.path = path;
     self.parseToDictionary = NO;
     return [self parse];
 }
 
--(NSArray *)parseIntoArraysOfDictionary:(NSString *)path
+-(NSArray *)parseIntoArraysOfDictionaries:(NSString *)path
 {
     self.path = path;
     self.parseToDictionary = YES;

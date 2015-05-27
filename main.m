@@ -12,10 +12,15 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool
     {
-        NSString *path = @"/Users/Erfan/Desktop/us-500.csv";
+        NSString *path = @"/Users/Erfan/Desktop/us-500.csv"; //change it to the path of your file
         ERCSVParser *parser = [ERCSVParser new];
-        NSArray *arrayOfArray = [parser parseIntoArraysOfArray:path];
-        NSArray *arraysOfDictionary = [parser parseIntoArraysOfDictionary:path];
+        NSArray *arrayOfArrays = [parser parseIntoArraysOfArrays:path];
+        NSArray *arraysOfDictionaries = [parser parseIntoArraysOfDictionaries:path];
+        
+        for (NSDictionary *record in arraysOfDictionaries)
+        {
+            NSLog(@"%@", record);
+        }
     }
     return 0;
 }
