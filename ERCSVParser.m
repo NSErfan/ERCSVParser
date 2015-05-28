@@ -10,7 +10,7 @@
 @property (nonatomic) NSMutableArray *records;
 @property (nonatomic) BOOL parseToDictionary;
 @property (nonatomic) NSString *path;
-@property (nonatomic) NSInteger header;
+@property (nonatomic) NSInteger currentIndex;
 @end
 
 @implementation ERCSVParser
@@ -33,7 +33,7 @@
 {
     self.records = [NSMutableArray new];
     self.attributeNames = nil;
-    self.header = -1;
+    self.currentIndex = -1;
     self.csvContent = [NSString stringWithContentsOfFile:self.path encoding:NSUTF8StringEncoding error:nil];
     
     NSString *record;
@@ -56,7 +56,6 @@
             }
             firstRow = NO;
         }
-
     } while (record);
     return [self.records copy];
 }
@@ -68,10 +67,10 @@
     }
     NSMutableArray *values = [NSMutableArray new];
     
-    NSInteger header = -1;
+    NSInteger index = -1;
     while(YES)
     {
-        NSInteger beginningIndex = header + 1;
+        NSInteger beginningIndex = index + 1;
         if (beginningIndex > record.length)
         {
             break;
@@ -79,30 +78,30 @@
         
         BOOL isItQuoted = NO;
         do {
-            header++;
+            index++;
             NSRange rangeOfFirstNewLine = [record rangeOfString:@","
                                                                  options:NSCaseInsensitiveSearch
-                                                                   range:NSMakeRange(header, record.length- header)];
+                                                                   range:NSMakeRange(index, record.length- index)];
             if (rangeOfFirstNewLine.location == NSNotFound)
             {
-                header = NSNotFound;
+                index = NSNotFound;
                 break;
             }
             
             isItQuoted = [self isItQuoted:rangeOfFirstNewLine.location string:record];
             if (!isItQuoted)
             {
-                header = rangeOfFirstNewLine.location;
+                index = rangeOfFirstNewLine.location;
             }
         } while (isItQuoted);
         
         NSString *value;
-        if (header == NSNotFound)
+        if (index == NSNotFound)
         {
             value = [record substringWithRange:NSMakeRange(beginningIndex, record.length - beginningIndex)];
         }else
         {
-            value = [record substringWithRange:NSMakeRange(beginningIndex, header - beginningIndex)];
+            value = [record substringWithRange:NSMakeRange(beginningIndex, index - beginningIndex)];
         }
         
         [values addObject:[self removeSurroundingQuotationMarks:value]];
@@ -197,7 +196,7 @@
 
 -(NSString *) nextRecord
 {
-    NSInteger beginningIndex = self.header + 1;
+    NSInteger beginningIndex = self.currentIndex + 1;
     if (beginningIndex > self.csvContent.length)
     {
         return nil;
@@ -205,12 +204,12 @@
     
     BOOL isItQuoted = NO;
     do {
-        self.header++;
+        self.currentIndex++;
         NSRange rangeOfFirstNewLine = [self.csvContent rangeOfCharacterFromSet:
                                        [NSCharacterSet characterSetWithCharactersInString:@"\n\r"]
                                                                        options:NSCaseInsensitiveSearch
                                                                          range:
-                                       NSMakeRange(self.header, self.csvContent.length- self.header)];
+                                       NSMakeRange(self.currentIndex, self.csvContent.length- self.currentIndex)];
         if (rangeOfFirstNewLine.location == NSNotFound)
         {
             return nil;
@@ -218,12 +217,12 @@
         isItQuoted = [self isItQuoted:rangeOfFirstNewLine.location string:self.csvContent];
         if (!isItQuoted)
         {
-            self.header = rangeOfFirstNewLine.location;
+            self.currentIndex = rangeOfFirstNewLine.location;
         }
-        self.header = rangeOfFirstNewLine.location;
+        self.currentIndex = rangeOfFirstNewLine.location;
     }while (isItQuoted);
     
-    NSString *recordStr = [self.csvContent substringWithRange:NSMakeRange(beginningIndex, self.header - beginningIndex)];
+    NSString *recordStr = [self.csvContent substringWithRange:NSMakeRange(beginningIndex, self.currentIndex - beginningIndex)];
     return recordStr;
 }
 
